@@ -1,12 +1,90 @@
+body {
+    background: rgb(246, 245, 240);
+    color: rgb(226, 212, 198);
+    box-sizing: border-box;
+    margin-top: 40px;
+}
 
-/* 
+.task-app {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 
-    You can write your own styles here...
-    
-    
-    ...Or you can use the import command to include 
-    other sylesheets into your bunde as well, e.j:
-    
-    import 'relative/path/to/stylesheet.scss';
+}
 
-*/
+/* task list */
+
+.task-principal-list {
+    width: 600px;
+    min-height: 500px;
+    background-color: rgb(243, 216, 209);
+    padding: 25px;
+    margin: 30px 10px;
+    border-radius: 26px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+}
+
+.list-title {
+    color: rgb(189, 175, 176);
+    text-shadow: 2px 2px 2px rgba(206, 89, 55, 0);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* task */
+
+.task-container {
+    width: 500px;
+    min-height: 65px;
+    margin: 5px 0;
+    padding: 8px 15px 8px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 7px;
+    background-color: rgb(199, 187, 188);
+    color: white;
+    border: 1px solid rgb(189, 175, 176);
+    cursor: pointer;
+}
+
+/* colores */
+.task-container:nth-child(3n+1){
+    background-color: rgb(189, 175, 176);
+
+}
+.task-container:nth-child(3n+2){
+    background-color: rgb(206, 214, 224);
+    
+}
+.task-container:nth-child(3n+3){
+    background-color: #E9CCB1;
+    
+}
+/* texto */
+.task-text {
+    width: 100%;
+    height: 100%;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    overflow-wrap: anywhere;
+}
+
+.task-icon {
+    width: 25px;
+    height: 25px;
+    margin: 5px;
+}
+
+/* task complete */
+
+.task-container.complete {
+    text-decoration: line-through;
+    background-color: rgba(56, 49, 50, 0.993), 0.644;
+    opacity: 0.5;
+}
