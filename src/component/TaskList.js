@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TaskForm from "./Form";
 import '../styles/TaskListStyles.css';
 import Task from './Task';
@@ -6,6 +6,7 @@ import Task from './Task';
 
 let TaskList = () => {
     const [tasks, setTasks] = useState([]);
+
 
     const addTask = task => {
         if (task.text.trim()) {
@@ -21,7 +22,7 @@ let TaskList = () => {
 
     const completeTask = id => {
         const taskUpdated = tasks.map(task => {
-            if (task.id === id){
+            if (task.id === id) {
                 task.complete = !task.complete;
             }
             return task;
