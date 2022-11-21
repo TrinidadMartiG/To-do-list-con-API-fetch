@@ -7,50 +7,65 @@ let TaskList = () => {
 
     const [tasks, setTasks] = useState([]);
     const [input, setInput] = useState('');
-    const [fetchedTasks, setFetchedTask] = useState([])
 
     /* GET FETCH */
+    const createUser = () => {
+        fetch("https://assets.breatheco.de/apis/fake/todos/user/trini",{
+            method: "POST",
+            body: JSON.stringify([]),
+            headers:{
+                "Content-Type": "application/json"
+            }
+        });
+    };
+
     const fetchTask = () => {
         fetch("https://assets.breatheco.de/apis/fake/todos/user/trini")
+
             .then(data => data.json())
-            .then(response => console.log('fetchTask response', response, setFetchedTask(response),console.log("console.log setfetchedtask",setFetchedTask)))
-    }
+            .then(response => 
+                setTasks(response),
+                 console.log('setTasks',setTasks))
+    };
+
     fetch('https://assets.breatheco.de/apis/fake/todos/user/trini', {
         method: "PUT",
         body: JSON.stringify(tasks),
         headers: {
-          "Content-Type": "application/json"
+            "Content-Type": "application/json"
         }
-      })
-      .then(resp => {
-          console.log(resp.ok); // will be true if the response is successfull
-          console.log(resp.status); // the status code = 200 or code = 400 etc.
-          console.log(resp.text()); // will try return the exact result as string
-          return resp.json(); // (returns promise) will try to parse the result as json as return a promise that you can .then for results
-      })
-      .then(data => {
-        tasks
-        console.log(data); //this will print on the console the exact object received from the server
-      })
-      .catch(error => {
-          //error handling
-          console.log(error);
-      });
+    })
+        .then(resp => {
+            console.log(resp.ok); // will be true if the response is successfull
+            console.log(resp.status); // the status code = 200 or code = 400 etc.
+            console.log(resp.text()); // will try return the exact result as string
+            return resp.json(); // (returns promise) will try to parse the result as json as return a promise that you can .then for results
+        })
+        .then(data => {
+            tasks
+            console.log(data); //this will print on the console the exact object received from the server
+        })
+        .catch(error => {
+            //error handling
+            console.log(error);
+        });
 
     useEffect(() => {
-        fetchTask()
+        createUser()
+        fetchTask()     
     }, []);
 
     const addTask = (taskFromDealSend) => {
         {
-            const taskUpdated = fetchedTasks === [] ? [fetchedTasks, ...tasks] : [taskFromDealSend, ...tasks];
+            const taskUpdated =  [taskFromDealSend, ...tasks];
             setTasks(taskUpdated);
         }
     };
-  
+
     const deleteTask = id => {
         setTasks(tasks.filter(task => task.id !== id));
     };
+    
 
     const dealChange = e => {
         /* extrae valor de campo de texto */
@@ -72,7 +87,9 @@ let TaskList = () => {
     const dealSend = e => {
         /* evita que se recarge app completa */
         e.preventDefault();
+
         const newTask = {
+            
             /* uuidv4 asigna identificadores unicos */
             id: uuidv4(),
             label: input,
@@ -105,7 +122,7 @@ let TaskList = () => {
 
             <div className="task-list-container">
                 {
-                
+
                     tasks.map((elm, indx) =>
                         < Task
                             key={elm.id}
