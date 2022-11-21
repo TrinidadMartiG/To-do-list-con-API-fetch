@@ -13,42 +13,41 @@ let TaskList = () => {
     const fetchTask = () => {
         fetch("https://assets.breatheco.de/apis/fake/todos/user/trini")
             .then(data => data.json())
-            .then(response => setFetchedTask(response))
+            .then(response => console.log('fetchTask response', response, setFetchedTask(response),console.log("console.log setfetchedtask",setFetchedTask)))
     }
-    const putTask = () =>{
-        /* formato de información enviada */
-        let header = new Headers();
-        header.append("Content-Typpe", "application/json")
-        /* definicion de información enviada */
-        let body = JSON.stringify([
-            {fetchedTasks}
-        ])
-        let requestOptions = {
-            method: "PUT",
-            headers: header,
-            body: body,
-            redirect: "follow"
+    fetch('https://assets.breatheco.de/apis/fake/todos/user/trini', {
+        method: "PUT",
+        body: JSON.stringify(tasks),
+        headers: {
+          "Content-Type": "application/json"
         }
+      })
+      .then(resp => {
+          console.log(resp.ok); // will be true if the response is successfull
+          console.log(resp.status); // the status code = 200 or code = 400 etc.
+          console.log(resp.text()); // will try return the exact result as string
+          return resp.json(); // (returns promise) will try to parse the result as json as return a promise that you can .then for results
+      })
+      .then(data => {
+        tasks
+        console.log(data); //this will print on the console the exact object received from the server
+      })
+      .catch(error => {
+          //error handling
+          console.log(error);
+      });
 
-        fetch("https://assets.breatheco.de/apis/fake/todos/user/trini")
-        .then(data=>data.json)
-        .then(response=>console.log)
-    }
     useEffect(() => {
-        fetchTask();
+        fetchTask()
     }, []);
 
     const addTask = (taskFromDealSend) => {
-        {   
-            const taskUpdated = fetchedTasks === null ? [fetchedTasks,...tasks] : [taskFromDealSend,...tasks];
+        {
+            const taskUpdated = fetchedTasks === [] ? [fetchedTasks, ...tasks] : [taskFromDealSend, ...tasks];
             setTasks(taskUpdated);
         }
     };
-    /*Termino GET FETCH */
-
-    /* Inicio PUT FETCH */
-        
-    /* Termino PUT FETCH */
+  
     const deleteTask = id => {
         setTasks(tasks.filter(task => task.id !== id));
     };
@@ -83,8 +82,8 @@ let TaskList = () => {
         };
         /*task.onSubmit(newTask);*/
         addTask(newTask)
-        console.log('addTask',addTask)
-        
+        console.log('addTask', addTask)
+
     };
 
     return (
@@ -106,15 +105,16 @@ let TaskList = () => {
 
             <div className="task-list-container">
                 {
-                    tasks.map((task) =>
+                
+                    tasks.map((elm, indx) =>
                         < Task
-                            key={task.id}
+                            key={elm.id}
                             /* debe tener un key para que react mantenga el orden de la lista */
-                            id={task.id}
-                            label={task.label}
-                            complete={task.complete}
+                            id={elm.id}
+                            label={elm.label}
+                            complete={elm.complete}
                             completeTask={completeTask}
-                            deleteTask={deleteTask} />
+                            deleteTask={deleteTask} />,
                     )
                 }
             </div>
