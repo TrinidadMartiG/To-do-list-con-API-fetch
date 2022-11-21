@@ -10,62 +10,93 @@ let TaskList = () => {
 
     /* GET FETCH */
     const createUser = () => {
-        fetch("https://assets.breatheco.de/apis/fake/todos/user/trini",{
+        fetch("https://assets.breatheco.de/apis/fake/todos/user/trini", {
             method: "POST",
             body: JSON.stringify([]),
-            headers:{
+            headers: {
                 "Content-Type": "application/json"
             }
-        });
+        })
+            .then(data => data.json())
+            .then(response => {
+                if (response.msg) {
+                    fetchTask()
+                } else {
+                    fetchTask()
+                }
+            })
+    };
+
+    const deleteUser = () => {
+        fetch("https://assets.breatheco.de/apis/fake/todos/user/trini", {
+            method: "Delete",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(data => data.json())
+            .then(response => {
+                if (response.result) {
+                    createUser()
+                }
+            })
     };
 
     const fetchTask = () => {
         fetch("https://assets.breatheco.de/apis/fake/todos/user/trini")
-
             .then(data => data.json())
-            .then(response => 
-                setTasks(response),
-                 console.log('setTasks',setTasks))
+            .then(response => {
+                if (response.msg) {
+                    createUser()
+                } else {
+                    setTasks(response)
+                }
+            })
     };
 
-    fetch('https://assets.breatheco.de/apis/fake/todos/user/trini', {
-        method: "PUT",
-        body: JSON.stringify(tasks),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-        .then(resp => {
-            console.log(resp.ok); // will be true if the response is successfull
-            console.log(resp.status); // the status code = 200 or code = 400 etc.
-            console.log(resp.text()); // will try return the exact result as string
-            return resp.json(); // (returns promise) will try to parse the result as json as return a promise that you can .then for results
+    const updateTask = (tasks) => {
+        fetch('https://assets.breatheco.de/apis/fake/todos/user/trini', {
+            method: "PUT",
+            body: JSON.stringify(tasks),
+            headers: {
+                "Content-Type": "application/json"
+            }
         })
-        .then(data => {
-            tasks
-            console.log(data); //this will print on the console the exact object received from the server
-        })
-        .catch(error => {
-            //error handling
-            console.log(error);
-        });
+            .then(resp => {
+                console.log(resp.ok); // will be true if the response is successfull
+                console.log(resp.status); // the status code = 200 or code = 400 etc.
+                console.log(resp.text()); // will try return the exact result as string
+                return resp.json(); // (returns promise) will try to parse the result as json as return a promise that you can .then for results
+            })
+            .then(data => {
+                tasks
+                console.log(data); //this will print on the console the exact object received from the server
+            })
+            .catch(error => {
+                //error handling
+                console.log(error);
+            });
+
+    }
 
     useEffect(() => {
-        createUser()
-        fetchTask()     
+        fetchTask()
     }, []);
 
     const addTask = (taskFromDealSend) => {
         {
-            const taskUpdated =  [taskFromDealSend, ...tasks];
+            const taskUpdated = [taskFromDealSend, ...tasks];
             setTasks(taskUpdated);
+            updateTask(taskUpdated);
         }
     };
 
     const deleteTask = id => {
-        setTasks(tasks.filter(task => task.id !== id));
+        const taskUpdated = tasks.filter(task => task.id !== id)
+        setTasks(taskUpdated);
+        updateTask(taskUpdated);
     };
-    
+
 
     const dealChange = e => {
         /* extrae valor de campo de texto */
@@ -89,7 +120,7 @@ let TaskList = () => {
         e.preventDefault();
 
         const newTask = {
-            
+
             /* uuidv4 asigna identificadores unicos */
             id: uuidv4(),
             label: input,
@@ -99,6 +130,7 @@ let TaskList = () => {
         };
         /*task.onSubmit(newTask);*/
         addTask(newTask)
+        setInput("")
         console.log('addTask', addTask)
 
     };
@@ -111,6 +143,7 @@ let TaskList = () => {
                     className="task-input"
                     placeholder="Write it here..."
                     name="label"
+                    value={input}
                     onChange={dealChange}
                 />
                 <button className="task-button" onClick={dealSend}>
@@ -125,7 +158,7 @@ let TaskList = () => {
 
                     tasks.map((elm, indx) =>
                         < Task
-                            key={elm.id}
+                            key={indx}
                             /* debe tener un key para que react mantenga el orden de la lista */
                             id={elm.id}
                             label={elm.label}
@@ -135,6 +168,9 @@ let TaskList = () => {
                     )
                 }
             </div>
+            <button className="task-button" onClick={deleteUser}>
+                Delete All
+            </button>
         </>
     );
 }
